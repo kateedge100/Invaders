@@ -1,0 +1,5 @@
+Invaders
+*.o
+core*
+Makefile
+*.pro.user*
