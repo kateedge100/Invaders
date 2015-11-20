@@ -8,8 +8,8 @@
 #define WIDTH 800
 // the height of the screen taking into account the maze and block
 #define HEIGHT 600
-// an enumeration for direction to move USE more enums!
-enum DIRECTION{UP,DOWN,LEFT,RIGHT,NONE};
+// an enumeration for direction to move USE more enums! UPDATE LEFT RIGHT, FIRE!
+enum DIRECTION{UP,DOWN,LEFT,RIGHT,NONE,SPACE};
 
 void initializeInvaders(Invader invaders[ROWS][COLS]);
 void updateInvaders(Invader invaders[ROWS][COLS]);
@@ -68,12 +68,12 @@ int main()
   // free the image
   SDL_FreeSurface(image);
 
-
-
   int quit=0;
   // now we are going to loop forever, process the keys then draw
 
-  while (quit !=1)
+
+
+  while (quit !=1)  //draw all things below here
   {
     SDL_Event event;
     // grab the SDL even (this will be keys etc)
@@ -90,8 +90,10 @@ int main()
         // if we have an escape quit
         case SDLK_ESCAPE : quit=1; break;
 
+
        }
     }
+
   }
 
   // now we clear the screen (will use the clear colour set previously)
@@ -99,6 +101,63 @@ int main()
   SDL_RenderClear(ren);
   updateInvaders(invaders);
   drawInvaders(ren,tex,invaders);
+
+  // Draw defender
+
+int Defender_x = (WIDTH / 2)-(DefenderWidth / 2);
+int Defender_y =  500;
+
+  SDL_Rect fillRect = {Defender_x,Defender_y,DefenderWidth, DefenderHeight};
+  SDL_SetRenderDrawColor(ren,128,255,0,1);
+  SDL_RenderFillRect(ren,&fillRect);
+
+  // Move Defender
+  // Defender Velocity
+  int Defender_xvel = 0;
+  int Defender_yvel = 0;
+
+
+  while (SDL_PollEvent(&event))
+  {
+  if (event.type == SDL_KEYDOWN)
+   {
+    switch(event.key.keysym.sym)
+    {
+    case SDLK_LEFT: Defender_x -=1; break;
+
+    }
+
+  }
+  // Stops defender accelerating
+  if (event.type == SDL_KEYUP)
+    {
+    switch(event.key.keysym.sym)
+      {
+    case SDLK_LEFT:
+      if(Defender_xvel > 0)
+        Defender_xvel = 0; break;
+      }
+    }
+  }
+  Defender_x += Defender_xvel;
+  Defender_y += Defender_yvel;
+
+
+
+
+
+// Render animation
+  //SDL_RenderCopy(ren,tex,NULL,NULL);
+
+  //SDL_RenderCopy(ren,tex, Defender_x, Defender_y);   //ADD DEFENDER TEXTURE
+
+
+
+
+
+
+
+
   // Up until now everything was drawn behind the scenes.
   // This will show the new, red contents of the window.
   SDL_RenderPresent(ren);
@@ -196,4 +255,20 @@ void updateInvaders(Invader invaders[ROWS][COLS])
 
     }
   }
+
+
+
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
